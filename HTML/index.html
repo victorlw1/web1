@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学校布局自动生成</title>
+    <link rel="stylesheet" href="../CSS/index.css">
+</head>
+<body>
+    <div class="full">
+    <p class="head">学校自动布局生成器</p>
+    <hr>
+    <div class="res-show">
+    <div class="info-left">
+       <div class="title">
+           <p class="title">绘制步骤</p>
+       </div> 
+       <div class="step">
+           <p>1.绘制道路</p>
+           <ul>
+               <li>主干道<img src="../Image/安全1.png" alt=""></li>
+               <li>次干道<img src="../Image/安全 2.png" alt=""></li>
+               <li>支路<img src="../Image/安全 3.png" alt=""></li>
+           </ul>
+           <p>2.绘制场地</p>
+           <ul>
+               <li>方形场地<img src="../Image/安全1.png" alt=""></li>
+               <li>多边形场地<img src="../Image/安全 2.png" alt=""></li>
+           </ul>
+       </div>
+       <div class="option">
+           <button class="bt1">撤回</button>
+           <button class="bt2">删除</button>
+       </div>
+    </div>
+    <div class="input"> 
+        <canvas class="board" width="450px" height="400px"></canvas>
+    </div>
+    
+       
+    
+    <div class="output"></div>
+    <div class="info-right"></div>
+    </div>
+    </div>
+    
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="../JS/canvas.js"></script>
+</html>
