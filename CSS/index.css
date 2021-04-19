@@ -64,13 +64,13 @@ ul li{
     position: relative;
     
 }
-.bt1{
+.reset{
     position: absolute;
     left: 38%;
     top: 50px;
     
 }
-.bt2{
+.clear{
     position: absolute;
     left: 38%;
     top: 100px;
