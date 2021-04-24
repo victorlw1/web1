@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学校自动布局生成器</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">
+                <a href="">
+                    <p>学校自动布局生成器</p>
+                </a>
+            </div>
+            <div class="navbar">
+                <ul>
+                    <li><a href="">
+                            <p>产品介绍</p>
+                        </a></li>
+                    <li><a href="">
+                            <p>关于我们</p>
+                        </a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="left">
+            <div class="title">
+                <p>笔刷选项</p>
+            </div>
+            <div class="brush-selection">
+                <div class="sub-title sub-title-road">
+                    <p>绘制道路</p>
+                </div>
+                <ul id="road-selections">
+                    <li id="main-road" class="main-road">
+                        <p class="main-road">主干道</p>
+                        <div class="main-road"></div>
+                    </li>
+                    <li id="submain-road" class="submain-road">
+                        <p class="submain-road">次干道</p>
+                        <div class="submain-road"></div>
+                    </li>
+                    <li id="branch-road" class="branch-road">
+                        <p class="branch-road">支路</p>
+                        <div class="branch-road"></div>
+                    </li>
+                </ul>
+                <div class="sub-title sub-title-field">
+                    <p>绘制场地</p>
+                </div>
+                <ul id="polygon_btn-selections">
+                    <li id="square_btn-field" class="square_btn-field">
+                        <p class="square_btn-field">方形场地</p>
+                    </li>
+                    <li id="polygon_btn-field" class="polygon_btn-field">
+                        <p class="polygon_btn-field">多边形场地</p>
+                    </li>
+                    <li id="polygon_btn-field" class="polygon_btn-field">
+                        <p class="polygon_btn-field">多边形场地</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="option">
+                <div id="redo" class="redo">
+                    <p>撤回</p>
+                </div>
+                <div id="clear" class="clear">
+                    <p>清空</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="right">
+
+            <div class="title">
+                <p>结果评价</p>
+            </div>
+            <div class="result-evaluation">
+
+            </div>
+        </div>
+
+        <div class="center">
+            <div class="content">
+                <div class="input">
+                    <canvas id="left-board" class="board" width="400px" height="400px"></canvas>
+                </div>
+                <div class="output">
+                    <canvas id="right-board" class="board" width="400px" height="400px"></canvas>
+                </div>
+                <div class="center_pos">
+                    <div class="generate">
+                        <p>生成布局</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<link rel="stylesheet" href="../CSS/LR_C.css">
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    window.addEventListener("resize", function () {
+        if (document.body.clientWidth < 1360) {
+            let elements = document.getElementsByClassName("center_pos")
+            Array.prototype.forEach.call(elements, element => {
+                element.style.top = "50%";
+            });
+        }
+        if (document.body.clientWidth > 1360) {
+            let elements = document.getElementsByClassName("center_pos")
+            Array.prototype.forEach.call(elements, element => {
+                element.style.top = "25%";
+            });
+        }
+    });
+</script>
+<script>
+    window.onload = function () {
+        let input_canvas = $("canvas#left-board")[0];
+        let canvasW = input_canvas.width; //获取画布的宽度
+        let canvasH = input_canvas.height; //获取画布的高度
+
+        let road_selections = $("ul#road-selections")[0];
+        let polygon_selections = $("ul#polygon_btn-selections")[0];
+
+        let isDrawing = false;
+        let isDrawRoad = false;
+        let isDrawField = false;
+        let isDrawMainRoad = false;
+        let isDrawSubmainRoad = false;
+        let isDrawBranchRoad = false;
+        let isDrawSquare = false;
+        let isDrawPolygon = false;
+
+        let mainRoad_btn = road_selections.getElementsByClassName("main-road")[0]
+        let submainRoad_btn = road_selections.getElementsByClassName("submain-road")[0]
+        let branchRoad_btn = road_selections.getElementsByClassName("branch-road")[0]
+        let square_btn = polygon_selections.getElementsByClassName("square_btn-field")[0]
+        let polygon_btn = polygon_selections.getElementsByClassName("polygon_btn-field")[0]
+
+        let cache_img = []; //用于存放画布图片截图的数组
+
+        let ctx = input_canvas.getContext("2d"); //创建画布对象
+        ctx.lineCap = "round"; //设置线条的结束端点样式
+        ctx.lineJion = "round"; //设置两条线相交时，所创建的拐角类型
+        ctx.fillStyle = "black";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+
+        // isDrawRoad = true;
+        // isDrawMainRoad = true;
+        // ctx.lineWidth = 16; //线宽
+        // mainRoad_btn.style.backgroundColor = "rgba(255, 255, 255, 0.5)"
+
+        // isDrawField = true;
+        // isDrawSquare = true;
+        // ctx.lineWidth = 16; //线宽
+        // square_btn.style.backgroundColor = "rgba(255, 255, 255, 0.5)"
+
+        road_selections.addEventListener("mousedown", function (e) {
+            let target = e.target;
+            isDrawRoad = true;
+            isDrawField = false;
+            if (target.className == "main-road") {
+                mainRoad_btn.style.backgroundColor =
+                    "rgba(255, 255, 255, 0.5)"
+                submainRoad_btn.style.backgroundColor =
+                    null
+                branchRoad_btn.style.backgroundColor =
+                    null
+                square_btn.style.backgroundColor =
+                    null
+                polygon_btn.style.backgroundColor =
+                    null
+                isDrawMainRoad = true;
+                isDrawSubmainRoad = false;
+                isDrawBranchRoad = false;
+                isDrawSquare = false;
+                isDrawPolygon = false;
+            }
+            if (target.className == "submain-road") {
+                mainRoad_btn.style.backgroundColor =
+                    null
+                submainRoad_btn.style.backgroundColor =
+                    "rgba(255, 255, 255, 0.5)"
+                branchRoad_btn.style.backgroundColor =
+                    null
+                square_btn.style.backgroundColor =
+                    null
+                polygon_btn.style.backgroundColor =
+                    null
+                isDrawMainRoad = false;
+                isDrawSubmainRoad = true;
+                isDrawBranchRoad = false;
+                isDrawSquare = false;
+                isDrawPolygon = false;
+            }
+            if (target.className == "branch-road") {
+                mainRoad_btn.style.backgroundColor =
+                    null
+                submainRoad_btn.style.backgroundColor =
+                    null
+                branchRoad_btn.style.backgroundColor =
+                    "rgba(255, 255, 255, 0.5)"
+                square_btn.style.backgroundColor =
+                    null
+                polygon_btn.style.backgroundColor =
+                    null
+                isDrawMainRoad = false;
+                isDrawSubmainRoad = false;
+                isDrawBranchRoad = true;
+                isDrawSquare = false;
+                isDrawPolygon = false;
+            }
+        })
+        polygon_selections.addEventListener("mousedown", function (e) {
+            let target = e.target;
+            isDrawField = true;
+            isDrawRoad = false;
+            if (target.className == "square_btn-field") {
+                mainRoad_btn.style.backgroundColor =
+                    null
+                submainRoad_btn.style.backgroundColor =
+                    null
+                branchRoad_btn.style.backgroundColor =
+                    null
+                square_btn.style.backgroundColor =
+                    "rgba(255, 255, 255, 0.5)"
+                polygon_btn.style.backgroundColor =
+                    null
+                isDrawMainRoad = false;
+                isDrawSubmainRoad = false;
+                isDrawBranchRoad = false;
+                isDrawSquare = true;
+                isDrawPolygon = false;
+            }
+            if (target.className == "polygon_btn-field") {
+                mainRoad_btn.style.backgroundColor =
+                    null
+                submainRoad_btn.style.backgroundColor =
+                    null
+                branchRoad_btn.style.backgroundColor =
+                    null
+                square_btn.style.backgroundColor =
+                    null
+                polygon_btn.style.backgroundColor =
+                    "rgba(255, 255, 255, 0.5)"
+                isDrawMainRoad = false;
+                isDrawSubmainRoad = false;
+                isDrawBranchRoad = false;
+                isDrawSquare = false;
+                isDrawPolygon = true;
+            }
+        })
+
+        let startX, startY;
+        input_canvas.addEventListener("mousedown", function (e) {
+            if (!isDrawing) {
+                isDrawing = true;
+                let pic = ctx.getImageData(0, 0, canvasW, canvasH); //获取当前画布的图像
+                cache_img.push(pic); //将当前图像存入数组
+                ctx.beginPath(); //起始/重置一条路径
+                startX = e.offsetX;
+                startY = e.offsetY;
+                ctx.moveTo(startX, startY); //把路径移动到画布中的指定点
+
+                if (isDrawRoad) {
+                    ctx.strokeStyle = "blue"
+                    if (isDrawMainRoad) {
+                        ctx.lineWidth = 16;
+                    }
+                    if (isDrawSubmainRoad) {
+                        ctx.lineWidth = 10;
+                    }
+                    if (isDrawBranchRoad) {
+                        ctx.lineWidth = 4;
+                    }
+                }
+                if (isDrawField) {
+                    ctx.strokeStyle = "black"
+                    ctx.lineWidth = 1;
+                }
+            }
+        });
+        input_canvas.addEventListener("mousemove", function (e) {
+            if (isDrawing) {
+                if (isDrawRoad) {
+                    ctx.lineTo(e.offsetX, e.offsetY); //添加一个新点，在画布中创建从该点到最后指定点的线条
+                    ctx.stroke();
+                }
+
+                // if (isDrawField) {
+                //     ctx.fillStyle = "black"
+                //     if (isDrawSquare) {
+                //         ctx.fillRect(startX, startY, e.offsetX - startX, e.offsetY - startY);
+                //     }
+                // }
+            }
+
+        });
+        input_canvas.addEventListener("mouseout", function (e) {
+            // ctx.closePath(); //当鼠标移出画布区域时,创建从当前点回到起始点的路径
+            // ctx.stroke();
+            isDrawing = false;
+        });
+        input_canvas.addEventListener("mouseup", function (e) {
+            if (isDrawing) {
+                if (isDrawRoad) {
+                    isDrawing = false;
+                }
+                if (isDrawField) {
+                    if (isDrawSquare) {
+                        ctx.fillRect(startX, startY, e.offsetX - startX, e.offsetY - startY);
+                        isDrawing = false;
+                    }
+                    if (isDrawPolygon) {
+                        let pic = ctx.getImageData(0, 0, canvasW, canvasH); //获取当前画布的图像
+                        cache_img.push(pic); //将当前图像存入数组
+                        ctx.lineTo(e.offsetX, e.offsetY);
+                        ctx.stroke();
+                        ctx.fill();
+                        isDrawing = true;
+                    }
+                }
+            }
+        });
+        $("div#clear").click(function () {
+            ctx.clearRect(0, 0, canvasW, canvasH); //创建一个等大画布覆盖
+        });
+        $("div#redo").click(function () {
+            if (cache_img.length > 0) {
+                ctx.putImageData(cache_img.pop(), 0, 0); //删除图像数组最后一位
+            }
+        });
+
+    }
+</script>
+
+</html>
