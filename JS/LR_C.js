@@ -273,7 +273,7 @@ window.addEventListener("load", function () {
         }
     });
 
-})；
+});
 window.addEventListener("load", function () {
     let generate = $("div#generate")[0];
     generate.addEventListener("mousedown", function (e) {
