@@ -52,15 +52,15 @@
                 <div class="sub-title sub-title-field">
                     <p>绘制场地</p>
                 </div>
-                <ul id="polygon_btn-selections">
-                    <li id="square_btn-field" class="square_btn-field">
-                        <p class="square_btn-field">方形场地</p>
+                <ul id="polygon-selections">
+                    <li id="square-field" class="square-field">
+                        <p class="square-field">方形场地</p>
                     </li>
-                    <li id="polygon_btn-field" class="polygon_btn-field">
-                        <p class="polygon_btn-field">多边形场地</p>
+                    <li id="polygon-field" class="polygon-field">
+                        <p class="polygon-field">多边形场地</p>
                     </li>
-                    <li id="polygon_btn-field" class="polygon_btn-field">
-                        <p class="polygon_btn-field">多边形场地</p>
+                    <li id="custom-field" class="custom-field">
+                        <p class="custom-field">自定义场地</p>
                     </li>
                 </ul>
             </div>
@@ -126,7 +126,7 @@
         let canvasH = input_canvas.height; //获取画布的高度
 
         let road_selections = $("ul#road-selections")[0];
-        let polygon_selections = $("ul#polygon_btn-selections")[0];
+        let polygon_selections = $("ul#polygon-selections")[0];
 
         let isDrawing = false;
         let isDrawRoad = false;
@@ -136,12 +136,14 @@
         let isDrawBranchRoad = false;
         let isDrawSquare = false;
         let isDrawPolygon = false;
+        let isDrawCustom = false;
 
-        let mainRoad_btn = road_selections.getElementsByClassName("main-road")[0]
-        let submainRoad_btn = road_selections.getElementsByClassName("submain-road")[0]
-        let branchRoad_btn = road_selections.getElementsByClassName("branch-road")[0]
-        let square_btn = polygon_selections.getElementsByClassName("square_btn-field")[0]
-        let polygon_btn = polygon_selections.getElementsByClassName("polygon_btn-field")[0]
+        let mainRoad = road_selections.getElementsByClassName("main-road")[0]
+        let submainRoad = road_selections.getElementsByClassName("submain-road")[0]
+        let branchRoad = road_selections.getElementsByClassName("branch-road")[0]
+        let square = polygon_selections.getElementsByClassName("square-field")[0]
+        let polygon = polygon_selections.getElementsByClassName("polygon-field")[0]
+        let custom = polygon_selections.getElementsByClassName("custom-field")[0]
 
         let cache_img = []; //用于存放画布图片截图的数组
 
@@ -152,109 +154,134 @@
         ctx.strokeStyle = "black";
         ctx.lineWidth = 1;
 
-        // isDrawRoad = true;
-        // isDrawMainRoad = true;
-        // ctx.lineWidth = 16; //线宽
-        // mainRoad_btn.style.backgroundColor = "rgba(255, 255, 255, 0.5)"
-
-        // isDrawField = true;
-        // isDrawSquare = true;
-        // ctx.lineWidth = 16; //线宽
-        // square_btn.style.backgroundColor = "rgba(255, 255, 255, 0.5)"
-
         road_selections.addEventListener("mousedown", function (e) {
             let target = e.target;
             isDrawRoad = true;
             isDrawField = false;
             if (target.className == "main-road") {
-                mainRoad_btn.style.backgroundColor =
+                mainRoad.style.backgroundColor =
                     "rgba(255, 255, 255, 0.5)"
-                submainRoad_btn.style.backgroundColor =
+                submainRoad.style.backgroundColor =
                     null
-                branchRoad_btn.style.backgroundColor =
+                branchRoad.style.backgroundColor =
                     null
-                square_btn.style.backgroundColor =
+                square.style.backgroundColor =
                     null
-                polygon_btn.style.backgroundColor =
+                polygon.style.backgroundColor =
+                    null
+                custom.style.backgroundColor =
                     null
                 isDrawMainRoad = true;
                 isDrawSubmainRoad = false;
                 isDrawBranchRoad = false;
                 isDrawSquare = false;
                 isDrawPolygon = false;
+                isDrawCustom = false;
             }
             if (target.className == "submain-road") {
-                mainRoad_btn.style.backgroundColor =
+                mainRoad.style.backgroundColor =
                     null
-                submainRoad_btn.style.backgroundColor =
+                submainRoad.style.backgroundColor =
                     "rgba(255, 255, 255, 0.5)"
-                branchRoad_btn.style.backgroundColor =
+                branchRoad.style.backgroundColor =
                     null
-                square_btn.style.backgroundColor =
+                square.style.backgroundColor =
                     null
-                polygon_btn.style.backgroundColor =
+                polygon.style.backgroundColor =
+                    null
+                custom.style.backgroundColor =
                     null
                 isDrawMainRoad = false;
                 isDrawSubmainRoad = true;
                 isDrawBranchRoad = false;
                 isDrawSquare = false;
                 isDrawPolygon = false;
+                isDrawCustom = false;
             }
             if (target.className == "branch-road") {
-                mainRoad_btn.style.backgroundColor =
+                mainRoad.style.backgroundColor =
                     null
-                submainRoad_btn.style.backgroundColor =
+                submainRoad.style.backgroundColor =
                     null
-                branchRoad_btn.style.backgroundColor =
+                branchRoad.style.backgroundColor =
                     "rgba(255, 255, 255, 0.5)"
-                square_btn.style.backgroundColor =
+                square.style.backgroundColor =
                     null
-                polygon_btn.style.backgroundColor =
+                polygon.style.backgroundColor =
+                    null
+                custom.style.backgroundColor =
                     null
                 isDrawMainRoad = false;
                 isDrawSubmainRoad = false;
                 isDrawBranchRoad = true;
                 isDrawSquare = false;
                 isDrawPolygon = false;
+                isDrawCustom = false;
             }
         })
         polygon_selections.addEventListener("mousedown", function (e) {
             let target = e.target;
             isDrawField = true;
             isDrawRoad = false;
-            if (target.className == "square_btn-field") {
-                mainRoad_btn.style.backgroundColor =
+            if (target.className == "square-field") {
+                mainRoad.style.backgroundColor =
                     null
-                submainRoad_btn.style.backgroundColor =
+                submainRoad.style.backgroundColor =
                     null
-                branchRoad_btn.style.backgroundColor =
+                branchRoad.style.backgroundColor =
                     null
-                square_btn.style.backgroundColor =
+                square.style.backgroundColor =
                     "rgba(255, 255, 255, 0.5)"
-                polygon_btn.style.backgroundColor =
+                polygon.style.backgroundColor =
+                    null
+                custom.style.backgroundColor =
                     null
                 isDrawMainRoad = false;
                 isDrawSubmainRoad = false;
                 isDrawBranchRoad = false;
                 isDrawSquare = true;
                 isDrawPolygon = false;
+                isDrawCustom = false;
             }
-            if (target.className == "polygon_btn-field") {
-                mainRoad_btn.style.backgroundColor =
+            if (target.className == "polygon-field") {
+                mainRoad.style.backgroundColor =
                     null
-                submainRoad_btn.style.backgroundColor =
+                submainRoad.style.backgroundColor =
                     null
-                branchRoad_btn.style.backgroundColor =
+                branchRoad.style.backgroundColor =
                     null
-                square_btn.style.backgroundColor =
+                square.style.backgroundColor =
                     null
-                polygon_btn.style.backgroundColor =
+                polygon.style.backgroundColor =
                     "rgba(255, 255, 255, 0.5)"
+                custom.style.backgroundColor =
+                    null
                 isDrawMainRoad = false;
                 isDrawSubmainRoad = false;
                 isDrawBranchRoad = false;
                 isDrawSquare = false;
                 isDrawPolygon = true;
+                isDrawCustom = false;
+            }
+            if (target.className == "custom-field") {
+                mainRoad.style.backgroundColor =
+                    null
+                submainRoad.style.backgroundColor =
+                    null
+                branchRoad.style.backgroundColor =
+                    null
+                square.style.backgroundColor =
+                    null
+                polygon.style.backgroundColor =
+                    null
+                custom.style.backgroundColor =
+                    "rgba(255, 255, 255, 0.5)"
+                isDrawMainRoad = false;
+                isDrawSubmainRoad = false;
+                isDrawBranchRoad = false;
+                isDrawSquare = false;
+                isDrawPolygon = false;
+                isDrawCustom = true;
             }
         })
 
@@ -262,8 +289,10 @@
         input_canvas.addEventListener("mousedown", function (e) {
             if (!isDrawing) {
                 isDrawing = true;
+
                 let pic = ctx.getImageData(0, 0, canvasW, canvasH); //获取当前画布的图像
                 cache_img.push(pic); //将当前图像存入数组
+
                 ctx.beginPath(); //起始/重置一条路径
                 startX = e.offsetX;
                 startY = e.offsetY;
@@ -290,22 +319,20 @@
         input_canvas.addEventListener("mousemove", function (e) {
             if (isDrawing) {
                 if (isDrawRoad) {
-                    ctx.lineTo(e.offsetX, e.offsetY); //添加一个新点，在画布中创建从该点到最后指定点的线条
+                    ctx.lineTo(e.offsetX, e.offsetY);
                     ctx.stroke();
                 }
-
-                // if (isDrawField) {
-                //     ctx.fillStyle = "black"
-                //     if (isDrawSquare) {
-                //         ctx.fillRect(startX, startY, e.offsetX - startX, e.offsetY - startY);
-                //     }
-                // }
+                if (isDrawField) {
+                    if (isDrawCustom) {
+                        ctx.lineTo(e.offsetX, e.offsetY);
+                        ctx.stroke();
+                        ctx.fill();
+                    }
+                }
             }
 
         });
         input_canvas.addEventListener("mouseout", function (e) {
-            // ctx.closePath(); //当鼠标移出画布区域时,创建从当前点回到起始点的路径
-            // ctx.stroke();
             isDrawing = false;
         });
         input_canvas.addEventListener("mouseup", function (e) {
@@ -325,6 +352,9 @@
                         ctx.stroke();
                         ctx.fill();
                         isDrawing = true;
+                    }
+                    if (isDrawCustom) {
+                        isDrawing = false;
                     }
                 }
             }
