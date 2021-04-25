@@ -103,39 +103,5 @@
 <link rel="stylesheet" href="../CSS/LR_C.css">
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="../JS/LR_C.js"></script>
-<script>
-    window.addEventListener("load", function () {
-        let generate = $("div#generate")[0];
-        generate.addEventListener("mousedown", function (e) {
-            let input_canvas = $("canvas#left-board")[0];
-            let pic_name = "pic_" + Date.now()
-            let oA = document.createElement("a");
-            oA.download = pic_name; // 设置下载的文件名
-            oA.href = input_canvas.toDataURL("image/png");
-            document.body.appendChild(oA);
-            oA.click();
-            oA.remove(); // 下载之后把创建的元素删除
-            let isDownloadOver = false;
-            let drawPic = function () {
-                let img = new Image();
-                img.src = "C:\\Users\\59787\\Downloads\\" + pic_name + ".png";
-                img.onload = function () {
-                    isDownloadOver = true;
-                    let output_canvas = $("canvas#right-board")[0];
-                    let canvasW = output_canvas.width; //获取画布的宽度
-                    let canvasH = output_canvas.height; //获取画布的高度
-                    let ctx = output_canvas.getContext("2d");
-                    ctx.clearRect(0, 0, canvasW, canvasH)
-                    ctx.drawImage(img, 0, 0, canvasW, canvasH);
-                    img = null
-                }
-                if (!isDownloadOver) {
-                    setTimeout(drawPic, 1)
-                }
-            }
-            setTimeout(drawPic, 1)
-        })
-    })
-</script>
 
 </html>
