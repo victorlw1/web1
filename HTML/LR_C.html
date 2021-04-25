@@ -113,7 +113,6 @@
         let generate = $("div#generate")[0];
 
         generate.addEventListener("mousedown", function (e) {
-
             let input_canvas = $("canvas#left-board")[0];
             let pic_name = "pic_" + Date.now()
             let oA = document.createElement("a");
@@ -122,15 +121,21 @@
             document.body.appendChild(oA);
             oA.click();
             oA.remove(); // 下载之后把创建的元素删除
-            setTimeout(function () {
+            let isDownloadOver = false;
+            let drawPic = function () {
                 let img = new Image();
                 img.src = "C:\\Users\\59787\\Downloads\\" + pic_name + ".png";
                 img.onload = function () {
+                    isDownloadOver = true;
                     let ctx = output_canvas.getContext("2d");
                     ctx.drawImage(img, 0, 0, canvasW, canvasH);
+                    img = null
                 }
-                delete img
-            }, 2000)
+                if (!isDownloadOver) {
+                    setTimeout(drawPic, 1)
+                }
+            }
+            setTimeout(drawPic, 1)
         })
 
         generate.addEventListener("mousedown", function (e) {
