@@ -66,7 +66,7 @@
             </div>
             <div class="option">
                 <div id="redo" class="redo">
-                    <p>撤回</p>
+                    <p>左板撤回</p>
                 </div>
                 <div id="clear" class="clear">
                     <p>清空</p>
@@ -109,7 +109,6 @@
         let canvasW = output_canvas.width; //获取画布的宽度
         let canvasH = output_canvas.height; //获取画布的高度
 
-        let rightDrawable = false;
         let generate = $("div#generate")[0];
 
         generate.addEventListener("mousedown", function (e) {
@@ -139,7 +138,6 @@
         })
 
         generate.addEventListener("mousedown", function (e) {
-            rightDrawable = true;
 
             let road_selections = $("ul#road-selections")[0];
             let polygon_selections = $("ul#polygon-selections")[0];
