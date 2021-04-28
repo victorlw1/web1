@@ -280,16 +280,17 @@ window.addEventListener("load", function () {
         let input_canvas = $("canvas#left-board")[0];
         let pic_name = "pic_" + Date.now()
         let oA = document.createElement("a");
-        oA.download = pic_name; // 设置下载的文件名
+        /* oA.download = pic_name; // 设置下载的文件名
         oA.href = input_canvas.toDataURL("image/png");
         document.body.appendChild(oA);
         oA.click();
-        oA.remove(); // 下载之后把创建的元素删除
-        let isDownloadOver = false;
+        oA.remove(); // 下载之后把创建的元素删除 */
+        let data=input_canvas.toDataURL();
+        /* let isDownloadOver = false; */
         let drawPic = function () {
-            let img = new Image();
-            img.src = "C:\\Users\\59787\\Downloads\\" + pic_name + ".png";
-            img.onload = function () {
+            let img =$("img#right-board")[0];
+            img.src = data;
+            /* img.onload = function () {
                 isDownloadOver = true;
                 let output_canvas = $("canvas#right-board")[0];
                 let canvasW = output_canvas.width; //获取画布的宽度
@@ -298,10 +299,10 @@ window.addEventListener("load", function () {
                 ctx.clearRect(0, 0, canvasW, canvasH)
                 ctx.drawImage(img, 0, 0, canvasW, canvasH);
                 img = null
-            }
-            if (!isDownloadOver) {
+            } */
+            /* if (!isDownloadOver) {
                 setTimeout(drawPic, 1)
-            }
+            } */
         }
         setTimeout(drawPic, 1)
     })
