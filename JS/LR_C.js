@@ -280,11 +280,11 @@ window.addEventListener("load", function () {
         let input_canvas = $("canvas#left-board")[0];
         let pic_name = "pic_" + Date.now()
         let oA = document.createElement("a");
-        /* oA.download = pic_name; // 设置下载的文件名
+        oA.download = pic_name; // 设置下载的文件名
         oA.href = input_canvas.toDataURL("image/png");
         document.body.appendChild(oA);
         oA.click();
-        oA.remove(); // 下载之后把创建的元素删除 */
+        oA.remove(); // 下载之后把创建的元素删除
         let data=input_canvas.toDataURL();
         /* let isDownloadOver = false; */
         let drawPic = function () {
